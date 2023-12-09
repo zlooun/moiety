@@ -231,7 +231,7 @@ function sortBy<T extends object, Key>(
   keyOrFn: keyof T | TItemFn<T, Key>,
   direction: EOrderDirection = EOrderDirection.ASC,
 ): T[] {
-  const directionCoeff = direction === EOrderDirection.ASC ? 1 : -1;
+  const directionRatio = direction === EOrderDirection.ASC ? 1 : -1;
 
   const fn = getKeyItemFn(keyOrFn);
 
@@ -240,11 +240,11 @@ function sortBy<T extends object, Key>(
     const propertyB = fn(b);
 
     if (propertyA > propertyB) {
-      return directionCoeff;
+      return directionRatio;
     }
 
     if (propertyA < propertyB) {
-      return -directionCoeff;
+      return -directionRatio;
     }
 
     return 0;
