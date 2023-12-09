@@ -5,7 +5,6 @@ declare global {
   }
 }
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Set.prototype, 'toArray', {
   value: function <T>(this: Set<T>) {
     return [...this];

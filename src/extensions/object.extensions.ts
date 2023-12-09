@@ -6,7 +6,6 @@ declare global {
   }
 }
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Object.prototype, 'typedKeys', {
   value: function <T extends object>(o: T) {
     return Object.keys(o);
@@ -16,7 +15,6 @@ Object.defineProperty(Object.prototype, 'typedKeys', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Object.prototype, 'typedFromEntries', {
   value: function <T>(entries: Iterable<readonly [keyof T, T[keyof T]]>) {
     return Object.fromEntries(entries);
@@ -26,7 +24,6 @@ Object.defineProperty(Object.prototype, 'typedFromEntries', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Object.prototype, 'typedEntries', {
   value: function <T extends object>(o: T) {
     return Object.entries(o);

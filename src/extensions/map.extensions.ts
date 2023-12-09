@@ -7,7 +7,6 @@ declare global {
   }
 }
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Map.prototype, 'getOrFail', {
   value: function <K, V>(
     this: Map<K, V>,
@@ -25,7 +24,6 @@ Object.defineProperty(Map.prototype, 'getOrFail', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Map.prototype, 'arrayValues', {
   value: function <K, V>(this: Map<K, V>) {
     return [...this.values()];
@@ -35,7 +33,6 @@ Object.defineProperty(Map.prototype, 'arrayValues', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Map.prototype, 'arrayKeys', {
   value: function <K, V>(this: Map<K, V>) {
     return [...this.keys()];
@@ -45,7 +42,6 @@ Object.defineProperty(Map.prototype, 'arrayKeys', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Map.prototype, 'arrayEntries', {
   value: function <K, V>(this: Map<K, V>) {
     return [...this.entries()];

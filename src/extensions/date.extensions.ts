@@ -18,7 +18,6 @@ declare global {
   }
 }
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Date.prototype, 'toDatestamp', {
   value: function (this: Date) {
     const diff = this.getTimezoneOffset() * 1000 * 60;
@@ -31,7 +30,6 @@ Object.defineProperty(Date.prototype, 'toDatestamp', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Date.prototype, 'toUtcDatestamp', {
   value: function (this: Date) {
     const isoUtcDateString = this.toISOString().split('T')[0];
@@ -43,7 +41,6 @@ Object.defineProperty(Date.prototype, 'toUtcDatestamp', {
   writable: false,
 });
 
-// type-coverage:ignore-next-line
 Object.defineProperty(Date.prototype, 'toLocalString', {
   value: function (this: Date) {
     const year = this.getFullYear();
