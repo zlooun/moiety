@@ -13,6 +13,7 @@ declare global {
   // eslint-disable-next-line
   interface Array<T> {
     groupBy: typeof groupBy;
+    keyBy: typeof keyBy;
     indexBy: typeof indexBy;
     uniqBy: typeof uniqBy;
     uniq: typeof uniq;
@@ -26,23 +27,15 @@ declare global {
 
 function getKeyCommonFn<T, Key>(keyOrFn: keyof T | TCommonFn<T, Key>) {
   return typeof keyOrFn === 'function'
-    ? keyOrFn // type-coverage:ignore-next-line
+    ? keyOrFn
     : (i: T): Key => i[keyOrFn] as unknown as Key;
 }
 
 function getKeyItemFn<T, Key>(keyOrFn: keyof T | TItemFn<T, Key>) {
   return typeof keyOrFn === 'function'
-    ? keyOrFn // type-coverage:ignore-next-line
+    ? keyOrFn
     : (i: T): Key => i[keyOrFn] as unknown as Key;
 }
-
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'groupBy', {
-  value: groupBy,
-  configurable: false,
-  enumerable: false,
-  writable: false,
-});
 
 function groupBy<T extends object>(
   this: Array<T>,
@@ -74,14 +67,49 @@ function groupBy<T, Key>(
   return result;
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'indexBy', {
-  value: indexBy,
+Object.defineProperty(Array.prototype, 'groupBy', {
+  value: groupBy,
   configurable: false,
   enumerable: false,
   writable: false,
 });
 
+function keyBy<T extends object>(
+  this: Array<T>,
+  key: TTakeFields<T, number>,
+): Map<number, T>;
+function keyBy<T extends object>(
+  this: Array<T>,
+  key: TTakeFields<T, string>,
+): Map<string, T>;
+function keyBy<T, Key>(this: Array<T>, fn: TCommonFn<T, Key>): Map<Key, T>;
+function keyBy<T, Key>(
+  this: Array<T>,
+  keyOrFn: keyof T | TCommonFn<T, Key>,
+): Map<Key, T> {
+  const fn = getKeyCommonFn(keyOrFn);
+
+  const result = new Map<Key, T>();
+
+  for (let i = 0; i < this.length; i++) {
+    const key = fn(this[i], i, this);
+
+    result.set(key, this[i]);
+  }
+
+  return result;
+}
+
+Object.defineProperty(Array.prototype, 'keyBy', {
+  value: keyBy,
+  configurable: false,
+  enumerable: false,
+  writable: false,
+});
+
+/**
+ * @deprecated The method has been renamed to keyBy, you should use keyBy instead of indexBy
+ */
 function indexBy<T extends object>(
   this: Array<T>,
   key: TTakeFields<T, number>,
@@ -108,9 +136,8 @@ function indexBy<T, Key>(
   return result;
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'uniqBy', {
-  value: uniqBy,
+Object.defineProperty(Array.prototype, 'indexBy', {
+  value: indexBy,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -132,9 +159,8 @@ function uniqBy<T, Key>(
   return [...this.indexBy(getKeyCommonFn(keyOrFn)).values()];
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'uniq', {
-  value: uniq,
+Object.defineProperty(Array.prototype, 'uniqBy', {
+  value: uniqBy,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -144,9 +170,8 @@ function uniq<T>(this: Array<T>) {
   return this.toSet().toArray();
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'nonNullable', {
-  value: nonNullable,
+Object.defineProperty(Array.prototype, 'uniq', {
+  value: uniq,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -156,9 +181,8 @@ function nonNullable<T>(this: Array<T>) {
   return this.filter((i): i is NonNullable<T> => i !== null && i !== undefined);
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'toSet', {
-  value: toSet,
+Object.defineProperty(Array.prototype, 'nonNullable', {
+  value: nonNullable,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -170,9 +194,8 @@ function toSet<T, Key>(this: Array<T>, fn?: TCommonFn<T, Key>) {
   return fn ? new Set(this.map(fn)) : new Set(this);
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'chunk', {
-  value: chunk,
+Object.defineProperty(Array.prototype, 'toSet', {
+  value: toSet,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -188,24 +211,21 @@ function chunk<T>(this: Array<T>, chunkSize: number) {
   return result;
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'exclude', {
-  value: exclude,
+Object.defineProperty(Array.prototype, 'chunk', {
+  value: chunk,
   configurable: false,
   enumerable: false,
   writable: false,
 });
 
 function exclude<T, U>(this: Array<T>, exclude: Array<T | U>) {
-  // type-coverage:ignore-next-line
   return (
     exclude.length ? this.filter((i) => !exclude.includes(i)) : [...this]
   ) as T extends U ? T[] : Exclude<T, U>[];
 }
 
-// type-coverage:ignore-next-line
-Object.defineProperty(Array.prototype, 'sortBy', {
-  value: sortBy,
+Object.defineProperty(Array.prototype, 'exclude', {
+  value: exclude,
   configurable: false,
   enumerable: false,
   writable: false,
@@ -250,5 +270,12 @@ function sortBy<T extends object, Key>(
     return 0;
   });
 }
+
+Object.defineProperty(Array.prototype, 'sortBy', {
+  value: sortBy,
+  configurable: false,
+  enumerable: false,
+  writable: false,
+});
 
 export {};
