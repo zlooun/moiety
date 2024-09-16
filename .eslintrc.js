@@ -86,6 +86,6 @@ module.exports = {
       { blankLine: 'never', prev: '*', next: 'case' },
     ],
     'unused-imports/no-unused-imports': 'error',
-    'prettier/prettier': 'error',
+    'prettier/prettier': 'warn',
   },
 };

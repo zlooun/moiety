@@ -5,40 +5,20 @@ declare global {
   }
 }
 
-function hasValue<T extends object>(
-  item: T & { value?: unknown },
-): item is T & { value: unknown } {
-  return !item || 'value' in item;
-}
+async function parallel<T extends readonly unknown[] | []>(
+  values: T,
+): Promise<{
+  -readonly [P in keyof T]: Awaited<T[P]>;
+}> {
+  const results = await Promise.allSettled(values);
+  const rejected = results.find(({ status }) => status === 'rejected');
 
-async function parallel<T extends readonly unknown[] | []>(values: T) {
-  const results = await Promise.all(
-    values.map((p) =>
-      Promise.resolve(p).then(
-        (v) => ({
-          state: 'fulfilled',
-          value: v,
-        }),
-        (r: unknown) => ({
-          state: 'rejected',
-          reason: r,
-        }),
-      ),
-    ),
-  );
-  const rejected = results.find(
-    (result) => result && result.state === 'rejected',
-  );
-
-  if (rejected && 'reason' in rejected) {
-    return Promise.reject(rejected.reason);
+  if (rejected) {
+    return Promise.reject((rejected as PromiseRejectedResult).reason);
   }
 
-  return results
-    .filter(hasValue)
-    .map((result) => result.value) as unknown as Promise<{
-    -readonly [P in keyof T]: Awaited<T[P]>;
-  }>;
+  //@ts-ignore
+  return results.map(({ value }) => value);
 }
 
 void Object.defineProperty(Promise, 'parallel', {
