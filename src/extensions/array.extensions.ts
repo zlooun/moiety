@@ -14,7 +14,6 @@ declare global {
   interface Array<T> {
     groupBy: typeof groupBy;
     keyBy: typeof keyBy;
-    indexBy: typeof indexBy;
     uniqBy: typeof uniqBy;
     uniq: typeof uniq;
     nonNullable: typeof nonNullable;
@@ -22,6 +21,11 @@ declare global {
     chunk: typeof chunk;
     exclude: typeof exclude;
     sortBy: typeof sortBy;
+
+    /**
+     * @deprecated The method has been renamed to keyBy, you should use keyBy instead of indexBy
+     */
+    indexBy: typeof indexBy;
   }
 }
 
@@ -107,9 +111,6 @@ Object.defineProperty(Array.prototype, 'keyBy', {
   writable: false,
 });
 
-/**
- * @deprecated The method has been renamed to keyBy, you should use keyBy instead of indexBy
- */
 function indexBy<T extends object>(
   this: Array<T>,
   key: TTakeFields<T, number>,
